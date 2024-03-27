@@ -1,0 +1,6 @@
+NEURON
+matplotlib
+tqdm
+unyt
+scipy
+pandas
