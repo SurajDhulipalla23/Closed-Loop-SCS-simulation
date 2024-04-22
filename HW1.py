@@ -9,6 +9,14 @@ from unyt import mA, uA, nA, cm, mm
 from scipy.interpolate import griddata
 import pandas as pd
 
+# Threshold search
+# Only the current currently included (no PW or frequency)
+# Make the fiber in the z direction
+# Have to have a ECAP (signal being used to close the loop), the number of fibers activated = ECAP response
+# i_membrane multiply surface area of node (nodal current)
+# Vr = SUM(I/4*pi*sigma*r) (I = membrane currents)
+# Fully exposed cylindrical lead
+
 file_name = 'ElectricalPotential.csv'
 
 electric_field_data = np.genfromtxt(file_name, delimiter=',', skip_header=9)
@@ -17,7 +25,7 @@ df['x-value'] *= 1000
 df['y-value'] *= 1000
 
 # Assuming E-field is directly proportional to the distance from the origin and its direction
-# Calculate vector components (this might need to be adjusted based on your specific situation)
+# Calculate vector components
 df['Ex'] = df['E-field'] * df['x-value'] / np.sqrt(df['x-value']**2 + df['y-value']**2)
 df['Ey'] = df['E-field'] * df['y-value'] / np.sqrt(df['x-value']**2 + df['y-value']**2)
 
@@ -122,7 +130,7 @@ def run(D, dist, electric_field_data, threshold=20):
     
     # Determine the location of each node for interpolation
     node_positions = np.linspace(-n_nodes//2, n_nodes//2, n_nodes) * (1e-5*(L + inl))
-
+    print("node positions = {node_positions}".format(node_positions = node_positions))
     # Interpolate electric field data to find potential at each node
     points = electric_field_data[:, :2]  # x, y positions
     values = electric_field_data[:, 2]   # Electric potential
